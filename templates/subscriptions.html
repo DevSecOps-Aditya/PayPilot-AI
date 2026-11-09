@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Subscriptions{% endblock %}
+{% block heading %}Subscription tracker{% endblock %}
+{% block subheading %}See the real cost of everything that auto-renews.{% endblock %}
+{% block actions %}<button class="btn btn-primary" id="add-btn" type="button">{{ icon('plus') }} Add subscription</button>{% endblock %}
+{% block content %}
+<section class="grid stats" style="grid-template-columns:repeat(3,1fr)">
+  <div class="card stat"><div class="label">Active</div><div class="value" id="s-count">–</div></div>
+  <div class="card stat"><div class="label">Monthly cost</div><div class="value" id="s-monthly">–</div></div>
+  <div class="card stat"><div class="label">Yearly cost</div><div class="value" id="s-yearly">–</div></div>
+</section>
+
+<section class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Cycle</th><th>Next renewal</th><th class="right">Amount</th><th class="right">Per month</th><th></th></tr></thead>
+      <tbody id="sub-body"></tbody>
+    </table>
+  </div>
+  <div id="sub-empty" class="empty hidden"><strong>No subscriptions yet</strong>Add streaming, apps and memberships to see what they add up to.</div>
+</section>
+
+<dialog class="modal" id="sub-dialog" aria-labelledby="sub-title">
+  <h2 id="sub-title">Add subscription</h2>
+  <form id="sub-form" novalidate>
+    <div class="field"><label for="s-name">Name</label><input id="s-name" name="name" maxlength="80" placeholder="e.g. Netflix" required></div>
+    <div class="field-row">
+      <div class="field"><label for="s-amount">Amount</label><input id="s-amount" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" required></div>
+      <div class="field"><label for="s-cycle">Billing cycle</label>
+        <select id="s-cycle" name="billing_cycle"><option value="monthly">Monthly</option><option value="yearly">Yearly</option><option value="weekly">Weekly</option></select></div>
+    </div>
+    <div class="field"><label for="s-next">Next billing date</label><input id="s-next" name="next_billing_date" type="date" required></div>
+    <div class="field"><label class="row" style="gap:8px;font-weight:500"><input type="checkbox" id="s-active" name="is_active" checked style="width:auto"> Active</label></div>
+    <p class="error-text" id="sub-error" role="alert"></p>
+    <div class="modal-actions"><button class="btn" type="button" data-close>Cancel</button><button class="btn btn-primary" type="submit">Save</button></div>
+  </form>
+</dialog>
+{% endblock %}

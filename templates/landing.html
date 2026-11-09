@@ -1,0 +1,41 @@
+{% from "_icons.html" import icon %}<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PayPilot AI · Your AI financial copilot</title>
+  <meta name="description" content="Track spending, plan budgets, manage subscriptions and reach goals with an AI copilot that knows your numbers.">
+  <script>try { document.documentElement.dataset.theme = localStorage.getItem("pp-theme") || "dark"; } catch (e) {}</script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body data-page="landing">
+<div class="landing">
+  <nav class="landing-nav" aria-label="Site">
+    <a class="brand" href="/"><span class="brand-mark">P</span><span>PayPilot <small>AI</small></span></a>
+    <div class="row"><a class="btn btn-ghost" href="{{ url_for('login') }}">Sign in</a><a class="btn btn-primary" href="{{ url_for('register') }}">Get started</a></div>
+  </nav>
+
+  <header class="hero">
+    <span class="badge primary">{{ icon('spark') }} AI financial copilot</span>
+    <h1 style="margin-top:var(--sp-4)">Know where your money goes, <span class="grad">before it goes.</span></h1>
+    <p>PayPilot AI tracks your spending, keeps budgets honest, catches forgotten subscriptions and tells you in plain language what to do next.</p>
+    <div class="row" style="justify-content:center">
+      <a class="btn btn-primary" href="{{ url_for('register') }}">Create free account</a>
+      <a class="btn" href="{{ url_for('login') }}">I already have one</a>
+    </div>
+  </header>
+
+  <section class="grid cards" aria-label="Features">
+    <article class="card feature"><div class="ico">{{ icon('card') }}</div><h3>Expense tracking</h3><p>Log income and spending in seconds, filter by month and category.</p></article>
+    <article class="card feature"><div class="ico">{{ icon('pie') }}</div><h3>Budget planner</h3><p>Set category limits, see live progress and get limits suggested from your history.</p></article>
+    <article class="card feature"><div class="ico">{{ icon('target') }}</div><h3>Goals</h3><p>Know exactly how much to save each month to hit a deadline.</p></article>
+    <article class="card feature"><div class="ico">{{ icon('repeat') }}</div><h3>Subscription tracker</h3><p>See the true monthly and yearly cost of everything that auto-renews.</p></article>
+    <article class="card feature"><div class="ico">{{ icon('chat') }}</div><h3>AI assistant</h3><p>Ask "where did my money go?" and get answers grounded in your real data.</p></article>
+    <article class="card feature"><div class="ico">{{ icon('file') }}</div><h3>AI reports</h3><p>One-click monthly reports with insights and a 30-day action plan.</p></article>
+  </section>
+  <p class="muted small" style="text-align:center;margin-top:var(--sp-6)">PayPilot AI gives budgeting guidance, not licensed financial advice.</p>
+</div>
+<script>window.PP = {{ pp_config|tojson }};</script>
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>

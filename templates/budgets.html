@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Budgets{% endblock %}
+{% block heading %}Budget planner{% endblock %}
+{% block subheading %}<span id="month-label">This month</span> · limits reset every month{% endblock %}
+{% block actions %}<button class="btn btn-primary" id="add-btn" type="button">{{ icon('plus') }} Set budget</button>{% endblock %}
+{% block content %}
+<section class="grid stats" style="grid-template-columns:repeat(3,1fr)">
+  <div class="card stat"><div class="label">Total budgeted</div><div class="value" id="b-limit">–</div></div>
+  <div class="card stat"><div class="label">Spent so far</div><div class="value" id="b-spent">–</div></div>
+  <div class="card stat"><div class="label">Remaining</div><div class="value" id="b-left">–</div></div>
+</section>
+
+<section class="grid cards" id="budget-cards"></section>
+<div id="budget-empty" class="card empty hidden"><strong>No budgets yet</strong>Set a limit for a category, or use a suggestion below.</div>
+
+<section class="grid two" style="margin-top:var(--sp-4)">
+  <div class="card"><div class="card-head"><h2>Suggested limits</h2><span class="badge info">From your last 3 months</span></div><div id="suggestions"></div></div>
+  <div class="card"><div class="card-head"><h2>50/30/20 starting point</h2></div><div id="plan503020"></div></div>
+</section>
+
+<dialog class="modal" id="budget-dialog" aria-labelledby="budget-title">
+  <h2 id="budget-title">Set budget</h2>
+  <form id="budget-form" novalidate>
+    <div class="field"><label for="b-category">Category</label><select id="b-category" name="category" required></select></div>
+    <div class="field"><label for="b-limit-input">Monthly limit</label><input id="b-limit-input" name="monthly_limit" type="number" min="1" step="0.01" inputmode="decimal" required></div>
+    <p class="xs muted">Setting a limit for a category that already has one updates it.</p>
+    <p class="error-text" id="budget-error" role="alert"></p>
+    <div class="modal-actions"><button class="btn" type="button" data-close>Cancel</button><button class="btn btn-primary" type="submit">Save</button></div>
+  </form>
+</dialog>
+{% endblock %}

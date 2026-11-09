@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Goals{% endblock %}
+{% block heading %}Financial goals{% endblock %}
+{% block subheading %}Set a target and see what to save each month.{% endblock %}
+{% block actions %}<button class="btn btn-primary" id="add-btn" type="button">{{ icon('plus') }} New goal</button>{% endblock %}
+{% block content %}
+<section class="grid cards" id="goal-cards"></section>
+<div id="goal-empty" class="card empty hidden"><strong>No goals yet</strong>Try an emergency fund, a trip or a big purchase.</div>
+
+<dialog class="modal" id="goal-dialog" aria-labelledby="goal-title">
+  <h2 id="goal-title">New goal</h2>
+  <form id="goal-form" novalidate>
+    <div class="field"><label for="g-title">Goal name</label><input id="g-title" name="title" maxlength="80" placeholder="e.g. Emergency fund" required></div>
+    <div class="field-row">
+      <div class="field"><label for="g-target">Target amount</label><input id="g-target" name="target_amount" type="number" min="1" step="0.01" inputmode="decimal" required></div>
+      <div class="field" id="g-saved-wrap"><label for="g-saved">Already saved</label><input id="g-saved" name="saved_amount" type="number" min="0" step="0.01" inputmode="decimal" value="0"></div>
+    </div>
+    <div class="field"><label for="g-deadline">Deadline <span class="muted">(optional)</span></label><input id="g-deadline" name="deadline" type="date"></div>
+    <p class="error-text" id="goal-error" role="alert"></p>
+    <div class="modal-actions"><button class="btn" type="button" data-close>Cancel</button><button class="btn btn-primary" type="submit">Save</button></div>
+  </form>
+</dialog>
+
+<dialog class="modal" id="contrib-dialog" aria-labelledby="contrib-title">
+  <h2 id="contrib-title">Add to goal</h2>
+  <form id="contrib-form" novalidate>
+    <div class="field"><label for="c-amount">Amount to add</label><input id="c-amount" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" required></div>
+    <p class="error-text" id="contrib-error" role="alert"></p>
+    <div class="modal-actions"><button class="btn" type="button" data-close>Cancel</button><button class="btn btn-primary" type="submit">Add</button></div>
+  </form>
+</dialog>
+{% endblock %}

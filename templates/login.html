@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · PayPilot AI</title>
+  <script>try { document.documentElement.dataset.theme = localStorage.getItem("pp-theme") || "dark"; } catch (e) {}</script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body data-page="login">
+<main class="auth-wrap">
+  <div class="card auth-card">
+    <a class="brand" href="/"><span class="brand-mark">P</span><span>PayPilot <small>AI</small></span></a>
+    <h1 style="text-align:center">Welcome back</h1>
+    <p class="muted small" style="text-align:center">Sign in to your financial copilot.</p>
+    <form id="login-form" novalidate>
+      <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+      <p class="error-text" id="form-error" role="alert"></p>
+      <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+    <p class="small muted" style="text-align:center;margin:var(--sp-4) 0 0">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+  </div>
+</main>
+<script>window.PP = {{ pp_config|tojson }};</script>
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>

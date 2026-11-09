@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Analytics{% endblock %}
+{% block heading %}Spending analytics{% endblock %}
+{% block subheading %}Trends and patterns in your money.{% endblock %}
+{% block actions %}
+  <label class="sr-only" for="a-period">Period</label>
+  <select id="a-period" style="width:auto"><option value="3">Last 3 months</option><option value="6" selected>Last 6 months</option><option value="12">Last 12 months</option></select>
+{% endblock %}
+{% block content %}
+<section class="grid stats">
+  <div class="card stat"><div class="label">Avg monthly spend</div><div class="value" id="k-avg-month">–</div></div>
+  <div class="card stat"><div class="label">Avg daily spend</div><div class="value" id="k-avg-day">–</div></div>
+  <div class="card stat"><div class="label">Total saved</div><div class="value" id="k-saved">–</div><div class="sub" id="k-rate"></div></div>
+  <div class="card stat"><div class="label">Largest expense</div><div class="value" id="k-largest">–</div><div class="sub" id="k-largest-sub"></div></div>
+</section>
+
+<section class="card" style="margin-bottom:var(--sp-4)"><div class="card-head"><h2>Income vs expenses</h2></div><div id="trend-chart"></div></section>
+
+<section class="grid two">
+  <div class="card"><div class="card-head"><h2>Where the money goes</h2></div><div id="cat-chart"></div></div>
+  <div class="card"><div class="card-head"><h2>Spending by weekday</h2></div><div id="weekday-chart"></div></div>
+</section>
+
+<section class="card"><div class="card-head"><h2>Top spending sources</h2></div><div id="merchants"></div></section>
+{% endblock %}

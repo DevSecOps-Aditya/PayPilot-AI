@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Hi, {{ user.name.split(' ')[0] }}{% endblock %}
+{% block subheading %}<span id="month-label">Your finances this month</span>{% endblock %}
+{% block actions %}
+  <a class="btn" href="{{ url_for('assistant') }}">{{ icon('chat') }} Ask PayPilot AI</a>
+  <button class="btn" id="set-payout-btn" type="button">Set a payout</button>
+  <a class="btn btn-primary" href="{{ url_for('expenses') }}?add=1">{{ icon('plus') }} Add transaction</a>
+{% endblock %}
+{% block content %}
+<div class="card hidden" id="onboarding" style="margin-bottom:var(--sp-4)">
+  <div class="empty">
+    <strong>Let's get you started</strong>
+    Add your first expense, or load sample data to explore every feature right away.
+    <div class="row" style="justify-content:center;margin-top:var(--sp-4)">
+      <button class="btn btn-primary" id="seed-btn" type="button">Load demo data</button>
+      <a class="btn" href="{{ url_for('expenses') }}?add=1">Add an expense</a>
+    </div>
+  </div>
+</div>
+
+<section class="grid stats" aria-label="This month at a glance">
+  <div class="card stat"><div class="label">Income</div><div class="value" id="st-income">–</div><div class="sub" id="st-income-sub"></div></div>
+  <div class="card stat"><div class="label">Expenses</div><div class="value" id="st-expense">–</div><div class="sub" id="st-expense-sub"></div></div>
+  <div class="card stat"><div class="label">Net savings</div><div class="value" id="st-net">–</div><div class="sub" id="st-net-sub"></div></div>
+  <div class="card stat"><div class="label">Savings rate</div><div class="value" id="st-rate">–</div><div class="sub" id="st-rate-sub"></div></div>
+</section>
+
+<section class="grid two">
+  <div class="card"><div class="card-head"><h2>Spending by category</h2></div><div id="cat-chart"></div></div>
+  <div class="card"><div class="card-head"><h2>Daily spending</h2><span class="muted small">This month</span></div><div id="daily-chart"></div></div>
+</section>
+
+<section class="grid three">
+  <div class="card"><div class="card-head"><h2>Budgets</h2><a class="small" href="{{ url_for('budgets') }}">Manage</a></div><div id="budget-list"></div></div>
+  <div class="card"><div class="card-head"><h2>Goals</h2><a class="small" href="{{ url_for('goals') }}">Manage</a></div><div id="goal-list"></div></div>
+  <div class="card"><div class="card-head"><h2>Upcoming renewals</h2><a class="small" href="{{ url_for('subscriptions') }}">Manage</a></div><div id="sub-list"></div></div>
+</section>
+
+<section class="grid split">
+  <div class="card"><div class="card-head"><h2>Recent transactions</h2><a class="small" href="{{ url_for('expenses') }}">View all</a></div><div id="recent"></div></div>
+  <div class="card">
+    <div class="card-head"><h2>Smart alerts</h2></div>
+    <div class="stack" id="alerts"></div>
+    <div class="row" style="margin-top:var(--sp-4)">
+      <button class="chip" data-ask="Where did my money go this month?">Where did my money go?</button>
+      <button class="chip" data-ask="How can I save more this month?">How can I save more?</button>
+    </div>
+  </div>
+</section>
+<dialog class="modal" id="payout-dialog" aria-labelledby="payout-title">
+  <h2 id="payout-title">Set a payout</h2>
+  <p class="muted">Enter your PayPal Sandbox app credentials. PayPilot validates and stores them encrypted, then asks for the merchant ID and order amount.</p>
+  <section id="payout-credentials-step">
+    <p id="payout-status" role="status">Checking secure PayPal setup…</p>
+    <form id="payout-credentials-form">
+      <div class="field">
+        <label for="payout-client-id">PayPal Sandbox Client ID</label>
+        <input id="payout-client-id" name="client_id" autocomplete="off" required maxlength="256">
+      </div>
+      <div class="field">
+        <label for="payout-client-secret">PayPal Sandbox Client Secret</label>
+        <input id="payout-client-secret" name="client_secret" type="password" autocomplete="new-password" required maxlength="512">
+      </div>
+      <p class="small muted">Use Sandbox API credentials from your PayPal Developer account. Do not enter your PayPal account password.</p>
+      <p class="error-text" id="payout-credentials-error" role="alert"></p>
+      <button class="btn btn-primary" id="payout-save-credentials" type="submit">Validate and continue</button>
+    </form>
+  </section>
+  <form id="payout-form" class="hidden">
+    <div class="field">
+      <label for="payout-merchant-id">PayPal merchant ID</label>
+      <input id="payout-merchant-id" name="merchant_id" required maxlength="64" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="payout-amount">Amount</label>
+      <input id="payout-amount" name="amount" type="number" min="0.01" max="1000000000" step="0.01" required>
+    </div>
+    <div class="field">
+      <label for="payout-currency">Currency</label>
+      <select id="payout-currency" name="currency">{% for currency in pp_config.currencies %}<option value="{{ currency }}" {% if currency == pp_config.currency %}selected{% endif %}>{{ currency }}</option>{% endfor %}</select>
+    </div>
+    <div class="field">
+      <label for="payout-description">Description <span class="muted">(optional)</span></label>
+      <input id="payout-description" name="description" maxlength="127" placeholder="What is the customer paying for?">
+    </div>
+    <p class="error-text" id="payout-error" role="alert"></p>
+    <button class="btn btn-primary" id="payout-create-btn" type="submit">Create PayPal order</button>
+  </form>
+  <button class="btn hidden" id="payout-change-credentials" type="button">Change PayPal credentials</button>
+  <div id="payout-result" class="hidden" style="margin-top:var(--sp-4)">
+    <p class="muted">Share this approval link with your customer. PayPal Sandbox will collect their approval.</p>
+    <a class="btn btn-primary" id="payout-approval-link" target="_blank" rel="noopener noreferrer">Open PayPal approval</a>
+    <button class="btn" id="payout-copy-link" type="button">Copy link</button>
+  </div>
+  <div class="modal-actions"><button class="btn" type="button" data-close>Close</button></div>
+</dialog>
+{% endblock %}

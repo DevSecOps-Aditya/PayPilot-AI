@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}AI Assistant{% endblock %}
+{% block heading %}PayPilot AI{% endblock %}
+{% block subheading %}<span id="ai-status" class="badge">Checking…</span> Your financial copilot, grounded in your own data.{% endblock %}
+{% block actions %}<button class="btn btn-ghost" id="clear-chat" type="button">Clear chat</button>{% endblock %}
+{% block content %}
+<section class="card chat" aria-label="Chat with PayPilot AI">
+  <div class="chat-log" id="chat-log" aria-live="polite"></div>
+  <div class="chips" id="chips">
+    <button class="chip" type="button">Where did my money go this month?</button>
+    <button class="chip" type="button">Which subscriptions should I cut?</button>
+    <button class="chip" type="button">Am I on track with my budgets?</button>
+    <button class="chip" type="button">How can I reach my goals faster?</button>
+    <button class="chip" type="button">Help me save 20% of my income</button>
+  </div>
+  <form class="chat-form" id="chat-form">
+    <label class="sr-only" for="chat-input">Message PayPilot AI</label>
+    <input id="chat-input" autocomplete="off" maxlength="1500" placeholder="Ask about spending, budgets, subscriptions or goals…">
+    <button class="btn btn-primary" type="submit" id="chat-send">{{ icon('send') }} Send</button>
+  </form>
+</section>
+{% endblock %}

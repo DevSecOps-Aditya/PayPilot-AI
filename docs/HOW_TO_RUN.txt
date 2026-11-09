@@ -1,0 +1,20 @@
+------------------------------------------------------------------------------------------
+                             HOW TO RUN THIS PROJECT?
+------------------------------------------------------------------------------------------
+
+
+
+RUNNING THE PROJECT IN Windows 10/11:
+
+    If you are in windows run: 'pip install Flask cryptography'
+        if python is not recognized then run: py -m pip install Flask cryptography
+            Once You have run these commands, then run: python app.py
+
+RUNNING THE PROJECT IN Linux:
+
+    If you are on Linux so in your terminal run: pip install Flask cryptography
+        If your system uses Python 3 explicitly: python3 -m pip install Flask cryptography
+            Once you have run these commands, then run python app.py
+
+RUNNING IN MacOs:
+    

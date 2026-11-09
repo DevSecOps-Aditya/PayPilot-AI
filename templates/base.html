@@ -1,0 +1,47 @@
+{% from "_icons.html" import icon %}<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}PayPilot AI{% endblock %} · PayPilot AI</title>
+  <script>try { document.documentElement.dataset.theme = localStorage.getItem("pp-theme") || "dark"; } catch (e) {}</script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body data-page="{{ page }}">
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">P</span><span>PayPilot <small>AI</small></span></a>
+    <nav class="nav">
+      {% set links = [
+        ('dashboard','Dashboard','home'), ('expenses','Expenses','card'), ('budgets','Budgets','pie'),
+        ('goals','Goals','target'), ('subscriptions','Subscriptions','repeat'), ('analytics','Analytics','chart'),
+        ('reports','Reports','file'), ('assistant','AI Assistant','chat') ] %}
+      {% for endpoint, label, ico in links %}
+      <a href="{{ url_for(endpoint) }}" {% if page == endpoint %}aria-current="page"{% endif %}>{{ icon(ico) }}{{ label }}</a>
+      {% endfor %}
+    </nav>
+    <div class="sidebar-foot">
+      <div class="small muted" title="{{ user.email }}">Signed in as <strong>{{ user.name }}</strong></div>
+      <button class="btn btn-ghost btn-sm" id="theme-toggle" type="button">{{ icon('moon') }} Toggle theme</button>
+      <button class="btn btn-ghost btn-sm" id="logout-btn" type="button">{{ icon('logout') }} Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="topbar">
+      <div class="row">
+        <button class="btn btn-ghost menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-controls="sidebar">{{ icon('menu') }}</button>
+        <div>
+          <h1>{% block heading %}{% endblock %}</h1>
+          <div class="muted small">{% block subheading %}{% endblock %}</div>
+        </div>
+      </div>
+      <div class="topbar-actions">{% block actions %}{% endblock %}</div>
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+</div>
+<script>window.PP = {{ pp_config|tojson }};</script>
+<script src="{{ url_for('static', filename='js/app.js', v='20261109-payout-credentials') }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% block title %}Reports{% endblock %}
+{% block heading %}Reports &amp; summaries{% endblock %}
+{% block subheading %}Monthly snapshot plus AI-written financial reports.{% endblock %}
+{% block actions %}
+  <input type="month" id="r-month" aria-label="Month" style="width:auto">
+  <button class="btn btn-primary" id="gen-btn" type="button">{{ icon('spark') }} Generate AI report</button>
+{% endblock %}
+{% block content %}
+<section class="card" style="margin-bottom:var(--sp-4)">
+  <div class="card-head"><h2 id="sum-title">Monthly summary</h2><span class="badge" id="sum-badge"></span></div>
+  <div class="grid stats" style="margin-bottom:var(--sp-4)">
+    <div class="stat"><div class="label">Income</div><div class="value" id="m-income">–</div></div>
+    <div class="stat"><div class="label">Expenses</div><div class="value" id="m-expense">–</div><div class="sub" id="m-change"></div></div>
+    <div class="stat"><div class="label">Net</div><div class="value" id="m-net">–</div></div>
+    <div class="stat"><div class="label">Savings rate</div><div class="value" id="m-rate">–</div></div>
+  </div>
+  <div class="grid two" style="margin-bottom:0">
+    <div><h3>Top categories</h3><div id="m-cats"></div></div>
+    <div><h3>Largest expenses</h3><div id="m-top"></div></div>
+  </div>
+</section>
+
+<section class="grid split">
+  <div class="card" id="report-view">
+    <div class="card-head"><h2 id="rv-title">AI report</h2><span class="badge hidden" id="rv-mode"></span></div>
+    <div class="report-body" id="rv-body"><div class="empty"><strong>No report selected</strong>Pick a month and generate one, or open a saved report.</div></div>
+  </div>
+  <div class="card"><div class="card-head"><h2>Saved reports</h2></div><div id="report-list"></div></div>
+</section>
+{% endblock %}

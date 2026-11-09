@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PayPal payment · PayPilot AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<main class="main" style="max-width:680px;margin:10vh auto;padding:var(--sp-5)">
+  <section class="card">
+    <h1 id="payment-title">PayPal payment</h1>
+    <p class="muted" id="payment-message" role="status" aria-live="polite">
+      {% if result == 'capture' %}Confirming payment with PayPal Sandbox…{% elif result == 'cancelled' %}You cancelled this payment. No payment was captured.{% else %}This payment link is invalid or has expired.{% endif %}
+    </p>
+  </section>
+</main>
+{% if result == 'capture' %}
+<script>
+(() => {
+  const title = document.querySelector("#payment-title");
+  const message = document.querySelector("#payment-message");
+  fetch("/api/payments/orders/{{ order_id }}/capture", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      state: {{ state|tojson }},
+      paypal_order_id: {{ paypal_order_id|tojson }}
+    })
+  }).then(async (response) => {
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "PayPal could not confirm the payment.");
+    title.textContent = "Payment complete";
+    message.textContent = `Payment received: ${data.amount} ${data.currency}. ${data.description}`;
+  }).catch((error) => {
+    title.textContent = "Payment not confirmed";
+    message.textContent = error.message || "PayPal could not confirm the payment.";
+  });
+})();
+</script>
+{% endif %}
+</body>
+</html>

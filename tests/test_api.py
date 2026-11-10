@@ -17,12 +17,14 @@ import app as paypilot  # noqa: E402
 c = paypilot.app.test_client()
 fails = []
 
-
 def check(name, cond, extra=""):
     print(("PASS " if cond else "FAIL ") + name + (f"  {extra}" if not cond else ""))
     if not cond:
         fails.append(name)
 
+
+health = c.get("/health")
+check("health check responds and reaches database", health.status_code == 200 and health.get_json()["status"] == "ok")
 
 # auth
 r = c.get("/api/transactions")

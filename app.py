@@ -57,6 +57,8 @@ def load_secret_key():
 
 
 paypal_return_base_url = os.environ.get("PAYPAL_RETURN_BASE_URL", "").strip()
+if not paypal_return_base_url:
+    paypal_return_base_url = os.environ.get("RENDER_EXTERNAL_URL", "").strip()
 if not paypal_return_base_url and APP_ENV == "development":
     paypal_return_base_url = f"http://127.0.0.1:{os.environ.get('PORT', '5000')}"
 
@@ -101,6 +103,12 @@ def handle_404(_err):
     if request.path.startswith("/api/"):
         return jsonify(error="Not found"), 404
     return redirect(url_for("index"))
+
+
+@app.get("/health")
+def health_check():
+    db().execute("SELECT 1").fetchone()
+    return jsonify(status="ok")
 
 
 def db():
